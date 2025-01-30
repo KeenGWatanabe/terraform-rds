@@ -58,6 +58,7 @@ variable "private_subnet_cidr" {
    ]
 }
 
+#terraform.tfvars
 variable "my_ip" {
   description = "Your IP address"
   type = string

@@ -76,4 +76,51 @@ resource "aws_route_table_association" "private" {
   subnet_id = aws_subnet.roger_private_subnet[count.index].id
 }
 
-#stopped at Step5 Creating Security Groups
+resource "aws_security_group" "roger_web_sg" {
+  name = "roger_web_sg"
+  description = "security group for web servers"
+  vpc_id = aws_vpc.roger_vpc.id
+
+  ingress {
+    description = "allow all traffic thro HTTP"
+    from_port = "80"
+    to_port = "80"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "allow SSH from my computer"
+    from_port = "22"
+    to_port = "22"
+    protocol = "tcp"
+    cidr_blocks = ["${var.my_ip}/32"] #using var "my_ip"
+  }
+  egress {
+    description = "allow all outbound traffic"
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "roger_web_sg"
+  }
+}
+
+resource "aws_security_group" "roger_db_sg" {
+  name = "roger_db_sg"
+  description = "security group for DB"
+  vpc_id = aws_vpc.roger_vpc.id
+  ingress {
+    description = "allow MySQL traffic from only web_sg"
+    from_port = "3306"
+    to_port = "3306"
+    protocol = "tcp"
+    security_groups = [aws_security_group.roger_web_sg.id]
+  }
+  tags = {
+    Name = "roger_db_sg"
+  }
+
+}
+#stopped at Step6
