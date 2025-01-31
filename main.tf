@@ -5,7 +5,7 @@ terraform {
      version = "5.83.1"
    }
  }
- required_version = "-> 1.1.5"
+ required_version = ">= 1.1.5"
 }
 
 provider "aws" {
@@ -133,7 +133,7 @@ resource "aws_db_instance" "roger_database" {
   allocated_storage = var.settings.database.allocated_storage
   engine = var.settings.database.engine
   engine_version = var.settings.database.engine_version
-  instance_class = var.settings.instance_class
+  instance_class = var.settings.database.instance_class
   db_name = var.settings.database.db_name
   username = var.db_username
   password = var.db_password
@@ -144,14 +144,15 @@ resource "aws_db_instance" "roger_database" {
 #8 create key-pair, not sure if necessary if already created!
 resource "aws_key_pair" "roger-debian-kp" {
   key_name = "roger-debian-kp"
-  public_key = file("roger-debian-kp.pub") #public key of ssh
+  public_key = file("roger-debian-kp.pub")
+  #public_key = file("terraform-rds/roger-debian-kp.pub") #public key of ssh
 }
 #create ubuntu ami
 data "aws_ami" "ubuntu" {
   most_recent = "true"
   filter {
     name = "name"
-    values = ["ubuntu/images/hvm-sad/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu-eks/k8s_1.24/images/hvm-ssd/ubuntu-focal-20.04-arm64-server-20231213.1"]
   }
   filter {
     name = "virtualization-type"
@@ -175,7 +176,7 @@ resource "aws_instance" "roger_web" {
 resource "aws_eip" "roger_web_eip" {
   count = var.settings.web_app.count
   instance = aws_instance.roger_web[count.index].id
-  vpc = true
+  #vpc = true
   tags = {
     Name = "roger_web_eip_${count.index}"
   }

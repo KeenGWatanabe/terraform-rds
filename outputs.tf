@@ -1,6 +1,6 @@
 output "web_public_ip" {
   description = "The public IP address of web server"
-  value = aws_eip.roger_web_eip[0].web_public_ip
+  value = aws_eip.roger_web_eip[0].public_ip
   depends_on = [ aws_eip.roger_web_eip ]
 }
 
