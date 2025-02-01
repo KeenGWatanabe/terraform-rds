@@ -23,10 +23,11 @@ variable "settings" {
   default = {
     "database" = {
       allocated_storage = 10
-      engine            = "MySQL"
-      engine_version    = "8.0.32"
-      instance_class    = "db.t4.micro"
       db_name           = "roger_db"
+      engine            = "mysql"
+      engine_version    = "8.0"
+      instance_class    = "db.t3.micro"
+      parameter_group_name = "default.mysql8.0"
       skip_final_snapshot = true
     },
     "web_app" = {
@@ -35,6 +36,7 @@ variable "settings" {
     }
   }
 }
+
 
 variable "public_subnet_cidr" {
   description = "Available CIDR-public subnets"

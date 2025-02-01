@@ -12,11 +12,11 @@ output "web_public_dns" {
 
 output "database_endpoint" {
   description = "The endpoint of database"
-  value = aws_db_instance.roger_database.address
+  value = aws_db_instance.roger_db.address
 }
 
 output "database_port" {
   description = "The port of database"
-  value = aws_db_instance.roger_database.port
+  value = aws_db_instance.roger_db.port
 }
 

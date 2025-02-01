@@ -129,7 +129,7 @@ resource "aws_db_subnet_group" "roger_db_subnet_group" {
  subnet_ids = [for subnet in aws_subnet.roger_private_subnet : subnet.id]
 }
 #7 create mySQL RDS
-resource "aws_db_instance" "roger_database" {
+resource "aws_db_instance" "roger_db" {
   allocated_storage = var.settings.database.allocated_storage
   engine = var.settings.database.engine
   engine_version = var.settings.database.engine_version
@@ -146,23 +146,27 @@ resource "aws_key_pair" "roger_kp" {
   key_name = "roger_kp"
   public_key = file("roger_kp.pub")#public key of ssh
 }
-#create ubuntu ami
-data "aws_ami" "ubuntu" {
+#create Linux ami
+data "aws_ami" "amazon_linux" {
   most_recent = "true"
+  owners = ["amazon"]
   filter {
     name = "name"
-    values = ["ubuntu-eks/k8s_1.24/images/hvm-ssd/ubuntu-focal-20.04-arm64-server-20231213.1"]
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
   filter {
     name = "virtualization-type"
     values = ["hvm"]
   }
-  owners = ["099720109477"]
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
 }
 #create EC2 roger_web
 resource "aws_instance" "roger_web" {
   count = var.settings.web_app.count
-  ami = data.aws_ami.ubuntu.id
+  ami = data.aws_ami.amazon_linux.id
   instance_type = var.settings.web_app.instance_type
   subnet_id = aws_subnet.roger_public_subnet[count.index].id
   key_name = aws_key_pair.roger_kp.key_name
