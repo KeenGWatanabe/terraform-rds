@@ -35,5 +35,5 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-roger_kp
-roger_kp.pub
+roger_kp.pem
+roger_kp.pem.pub
