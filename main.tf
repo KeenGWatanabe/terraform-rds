@@ -82,18 +82,18 @@ resource "aws_security_group" "roger_web_sg" {
   vpc_id = aws_vpc.roger_vpc.id
 
   ingress {
+    description = "allow SSH from my computer"
+    from_port = "22"
+    to_port = "22"
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] #${var.my_ip}/32 using var "my_ip"
+  }
+  ingress {
     description = "allow all traffic thro HTTP"
     from_port = "80"
     to_port = "80"
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "allow SSH from my computer"
-    from_port = "22"
-    to_port = "22"
-    protocol = "tcp"
-    cidr_blocks = ["${var.my_ip}/32"] #using var "my_ip"
   }
   egress {
     description = "allow all outbound traffic"
@@ -144,7 +144,7 @@ resource "aws_db_instance" "roger_db" {
 #8 create key-pair, stored in config folder here
 resource "aws_key_pair" "roger_kp" {
   key_name = "roger_kp"
-  public_key = file("roger_kp.pub")#public key of ssh
+  public_key = file("roger_kp.pem.pub")#public key of ssh
 }
 #create Linux ami
 data "aws_ami" "amazon_linux" {
