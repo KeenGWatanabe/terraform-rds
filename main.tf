@@ -141,11 +141,10 @@ resource "aws_db_instance" "roger_database" {
   vpc_security_group_ids = [aws_security_group.roger_db_sg.id]
   skip_final_snapshot = var.settings.database.skip_final_snapshot
 }
-#8 create key-pair, not sure if necessary if already created!
-resource "aws_key_pair" "roger-debian-kp" {
-  key_name = "roger-debian-kp"
-  public_key = file("roger-debian-kp.pub")
-  #public_key = file("terraform-rds/roger-debian-kp.pub") #public key of ssh
+#8 create key-pair, stored in config folder here
+resource "aws_key_pair" "roger_kp" {
+  key_name = "roger_kp"
+  public_key = file("roger_kp.pub")#public key of ssh
 }
 #create ubuntu ami
 data "aws_ami" "ubuntu" {
@@ -166,7 +165,7 @@ resource "aws_instance" "roger_web" {
   ami = data.aws_ami.ubuntu.id
   instance_type = var.settings.web_app.instance_type
   subnet_id = aws_subnet.roger_public_subnet[count.index].id
-  key_name = aws_key_pair.roger-debian-kp.key_name
+  key_name = aws_key_pair.roger_kp.key_name
   vpc_security_group_ids = [aws_security_group.roger_web_sg.id]
   tags ={
     Name = "roger_web_${count.index}"

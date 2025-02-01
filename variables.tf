@@ -23,10 +23,10 @@ variable "settings" {
   default = {
     "database" = {
       allocated_storage = 10
-      engine            = "mysql"
-      engine_version    = "8.0.27"
-      instance_class    = "db.t2.micro"
-      db_name           = "roger-db"
+      engine            = "MySQL"
+      engine_version    = "8.0.32"
+      instance_class    = "db.t4.micro"
+      db_name           = "roger_db"
       skip_final_snapshot = true
     },
     "web_app" = {
