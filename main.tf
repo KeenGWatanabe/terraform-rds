@@ -86,7 +86,7 @@ resource "aws_security_group" "roger_web_sg" {
     from_port = "22"
     to_port = "22"
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] #${var.my_ip}/32 using var "my_ip"
+    cidr_blocks = ["${var.my_ip}/32"] #using var "my_ip"
   }
   ingress {
     description = "allow all traffic thro HTTP"
