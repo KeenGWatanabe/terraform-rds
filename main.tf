@@ -179,7 +179,7 @@ resource "aws_instance" "roger_web" {
 resource "aws_eip" "roger_web_eip" {
   count = var.settings.web_app.count
   instance = aws_instance.roger_web[count.index].id
-  #vpc = true
+  
   tags = {
     Name = "roger_web_eip_${count.index}"
   }
